@@ -1,16 +1,7 @@
 #pragma once
 #include "Types.hpp"
 #include "Enum.hpp"
-
-enum class Font : byte
-{
-	ChaletLondon = 0,
-	HouseScript = 1,
-	Monospace = 2,
-	Wingdings = 3,
-	ChaletComprimeCologne = 4,
-	Pricedown = 7
-};
+#include "Drawing.hpp"
 
 enum Submenu : short {
 	nomenu,
@@ -18,17 +9,7 @@ enum Submenu : short {
 	settings,
 };
 
-enum TextAllinement : byte {
-	Right,
-	Left,
-	Center
-};
-
 float GetWidthScale(float width);
-void Rect(float x, float y, float width, float height, Color color);
-void Sprite(const char* dict, const char* texture, float x, float y, float width, float height, Color color, float rotation);
-void Text(TextAllinement allinement, const char* text, float x, float y, float size, Font font, Color color, bool outline = false, bool shadow = false);
-void PrintTextOnScreen(char* Message);
 
 void Header();
 void Break(const char* text);
@@ -37,6 +18,7 @@ void Suboption(const char* text, Submenu submenu, std::function<void()> function
 void Toggle(const char* text, bool& _bool, std::function<void()> function = [] {});
 template <typename Variable>
 void Number(const char* text, Variable& reference, Variable minimum, Variable maximum, Variable step = 1);
+
 void Footer();
 
 void SetSubmenu(Submenu submenu);

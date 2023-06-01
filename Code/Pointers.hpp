@@ -21,8 +21,6 @@ public:
 	run_script_threads m_RunScriptThread;
 
 	PVOID m_ModelBypass;
-	std::uint64_t m_CPedFactory;
-	std::uint32_t* m_GameState;
 	rage::scrNativeRegistrationTable* m_NativeRegistrations;
 	std::uint64_t** m_GlobalBase;
 };

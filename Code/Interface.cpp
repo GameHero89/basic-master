@@ -10,80 +10,23 @@
 #define submenu(menu) case menu: {
 #define subend break; }
 
-void Interface() {
+static bool invincible = false;
+void InvinciblePlayer(bool toggle) {
+	ENTITY::SET_ENTITY_INVINCIBLE(PLAYER::PLAYER_PED_ID(), toggle);
+}
+
+void Features() {
+	InvinciblePlayer(invincible);
+}
+
+void Menu() {
+	Features();
+
 	static bool init = true;
 	if (init) {
 		char Message[] = "Welcome to Basic!/Made by GameHero/Open with * or F10/Enjoy :D";
-		PrintTextOnScreen(Message);
+		PrintMessageOnScreen(Message, Font::HouseScript, HeaderRect);
 		init = false;
-	}
-
-	openKey = false;
-	enterKey = false;
-	backKey = false;
-	leftKey = false;
-	rightKey = false;
-	upKey = false;
-	downKey = false;
-
-	static int timer = timeGetTime();
-	if (timeGetTime() - timer > EnterDelay) {
-		openKey = (IsKeyPressed(VK_F10) || IsKeyPressed(VK_MULTIPLY) || (CONTROLS::IS_DISABLED_CONTROL_PRESSED(0, INPUT_SCRIPT_RB) && CONTROLS::IS_DISABLED_CONTROL_PRESSED(0, INPUT_FRONTEND_RIGHT)));
-		if (openKey) timer = timeGetTime();
-	}
-
-	if (openKey) {
-		SetSubmenu(CurrentSubmenu ? nomenu : mainmenu);
-	}
-
-	if (CurrentSubmenu != nomenu) {
-		//Disables Phone
-		CONTROLS::DISABLE_CONTROL_ACTION(0, INPUT_PHONE, true);
-
-		//Disables Controller relatet stuff
-		CAM::SET_CINEMATIC_BUTTON_ACTIVE(0);
-		int disabledControls[] = { 0, 19, 20, 74, 80, 85, 140, 141, 142, 337 };
-		for (int i = 0; i < ARRAYSIZE(disabledControls); i++) {
-			CONTROLS::DISABLE_CONTROL_ACTION(0, disabledControls[i], true);
-		}
-
-		static int timer = timeGetTime();
-		static int timer1 = timeGetTime();
-		static int timer2 = timeGetTime();
-
-		if (timeGetTime() - timer > EnterDelay) {
-			enterKey = CONTROLS::IS_DISABLED_CONTROL_PRESSED(0, INPUT_FRONTEND_RDOWN) || IsKeyPressed(VK_NUMPAD5);
-			backKey = CONTROLS::IS_DISABLED_CONTROL_PRESSED(0, INPUT_FRONTEND_RRIGHT) || IsKeyPressed(VK_NUMPAD0);
-			if (enterKey || backKey) timer = timeGetTime();
-		}
-		if (timeGetTime() - timer1 > HorizontalDelay) {
-			leftKey = CONTROLS::IS_DISABLED_CONTROL_PRESSED(0, INPUT_FRONTEND_LEFT) || IsKeyPressed(VK_NUMPAD4);
-			rightKey = CONTROLS::IS_DISABLED_CONTROL_PRESSED(0, INPUT_FRONTEND_RIGHT) || IsKeyPressed(VK_NUMPAD6);
-			if (leftKey || rightKey) timer1 = timeGetTime();
-		}
-		if (timeGetTime() - timer2 > VerticalDelay) {
-			upKey = CONTROLS::IS_DISABLED_CONTROL_PRESSED(0, INPUT_FRONTEND_UP) || IsKeyPressed(VK_NUMPAD8);
-			downKey = CONTROLS::IS_DISABLED_CONTROL_PRESSED(0, INPUT_FRONTEND_DOWN) || IsKeyPressed(VK_NUMPAD2);
-			if (upKey || downKey) timer2 = timeGetTime();
-		}
-	}
-
-	if (backKey) {
-		SetSubmenu(SubmenuStack.back());
-	}
-
-	if (upKey) {
-		SelectedOption--;
-
-	} if (downKey) {
-		SelectedOption++;
-	}
-
-	if (SelectedOption < 1) {
-		SelectedOption = StaticOptionCount;
-	}
-	if (SelectedOption > StaticOptionCount && StaticOptionCount) {
-		SelectedOption = 1;
 	}
 
 
@@ -91,10 +34,13 @@ void Interface() {
 	if (CurrentSubmenu != nomenu) {
 		Header();
 		InterfaceSwitch() {
-			submenu(mainmenu)
 
+			submenu(mainmenu)
+			
+			Toggle("Invincible (Godmode)", invincible);
+			Break("Demo");
 			Button("Button", [] {
-				PrintTextOnScreen((char*)"Button/Pressed");
+				PrintMessageOnScreen((char*)"Button/Pressed", Font::HouseScript, HeaderRect);
 				});
 			static bool _bool = true;
 			Break("Break");
@@ -112,6 +58,7 @@ void Interface() {
 			subend
 
 			submenu(settings)
+
 			Number<float>("Pos X", PosX, 0.0f + (GetWidthScale(Width) / 2.f), 1.f - (GetWidthScale(Width) / 2.f), 0.01f);
 			Number<float>("Pos Y", PosY, 0.0f, 1.f - (DrawY - PosY), 0.01f);
 			Number<float>("Width", Width, 0.01f, 1.f, 0.01f);
@@ -142,85 +89,19 @@ void Interface() {
 			FooterFont = (Font)font3;
 			Number<float>("Footer Height", FooterHeight, 0.01f, 0.5f, 0.001f);
 			Number<float>("Footer Text Size", FooterTextSize, 0.1f, 10.f, 0.01f);
+
 			subend
+
 		}
 		Footer();
 	}
-
-	if (!StaticOptionCount && OptionCount)
-		StaticOptionCount = OptionCount;
-
-	OptionCount = 0;
 }
+
+
 
 
 
 // BasicUI by GameHero
-
-void Rect(float x, float y, float width, float height, Color color) {
-	GRAPHICS::DRAW_RECT(x, y, width, height, color.r, color.g, color.b, color.a);
-}
-
-void Sprite(const char* dict, const char* texture, float x, float y, float width, float height, Color color, float rotation) {
-	if (!GRAPHICS::HAS_STREAMED_TEXTURE_DICT_LOADED(dict)) {
-		GRAPHICS::REQUEST_STREAMED_TEXTURE_DICT(dict, false);
-	}
-	if (GRAPHICS::HAS_STREAMED_TEXTURE_DICT_LOADED(dict)) {
-		GRAPHICS::DRAW_SPRITE(dict, texture, x, y, width, height, rotation, color.r, color.g, color.b, color.a);
-	}
-}
-
-void Text(TextAllinement allinement, const char* text, float x, float y, float size, Font font, Color color, bool outline, bool shadow) {
-	// Added Centering for text 
-	// Unbelievable that gta cant
-	// center their texts right
-	// and use uniform sizes
-	// sadly bcs char sprites 
-	// differ in size the fonts
-	// arent perfectly the same size
-
-	float scale = 1.f;
-	switch (font) {
-	case Font::ChaletLondon:
-		scale = 0.75f;
-		break;
-	case Font::HouseScript:
-		scale = 0.93f;
-		break;
-	case Font::Monospace:
-		scale = 0.85f;
-		break;
-	case Font::Wingdings:
-		scale = 0.65f;
-		break;
-	case Font::ChaletComprimeCologne:
-		scale = 0.85f;
-		break;
-	case Font::Pricedown:
-		scale = 1.05f;
-		size = (size * 0.8f); // fix for pricedown being very oversize
-		break;
-	}
-
-	if (allinement == Right) {
-		UI::SET_TEXT_WRAP(0.f, x);
-		UI::SET_TEXT_RIGHT_JUSTIFY(true);
-	}
-	if (allinement == Center) {
-		UI::SET_TEXT_CENTRE(true);
-	}
-	UI::SET_TEXT_SCALE(size * scale, size * scale);
-	UI::SET_TEXT_FONT((int)(font));
-	UI::SET_TEXT_COLOUR(color.r, color.g, color.b, color.a);
-	if (outline)
-		UI::SET_TEXT_OUTLINE();
-	if (shadow)
-		UI::SET_TEXT_DROP_SHADOW();
-	UI::BEGIN_TEXT_COMMAND_DISPLAY_TEXT("STRING");
-	UI::ADD_TEXT_COMPONENT_SUBSTRING_PLAYER_NAME(text);
-	// 18.01801801801802 is the text to rect size converter apparrently, its used by GetTextScale
-	UI::END_TEXT_COMMAND_DISPLAY_TEXT(x, y - (((size * scale) / (scale * 18.01801801801802)) / 2));
-}
 
 float GetWidthScale(float width) {
 	return width * (1.77778 /*16:9*/ / GRAPHICS::_GET_ASPECT_RATIO(0));
@@ -350,46 +231,84 @@ void SetSubmenu(Submenu submenu) {
 	OptionCount = 0;
 }
 
-void PrintTextOnScreen(char* Message) {
-	//divide lines by slash "/"
+void Interface() {
 
-	int blurrspeed = 380;
-	GRAPHICS::_TRANSITION_TO_BLURRED(blurrspeed);
-	char Word[100];
-	memset(Word, 0, sizeof(Word));
-	int count = 0;
-	int wordcount = 0;
-	while (g_Running) {
-		char _char = Message[count];
-		if (_char != '/' && _char != '\0') {
-			Word[wordcount] = _char;
-			wordcount++;
-			count++;
-		}
-		else {
-			int timer = timeGetTime();
-			int delay = 900;
-			int alpha = 0;
-			while ((timeGetTime() - timer < delay) && g_Running) {
-				if (alpha < 255) {
-					alpha += (255 / ((1.f / GAMEPLAY::GET_FRAME_TIME()) / (1000 / (delay / 4.f))));
-				}
-				if (alpha > 255) alpha = 255;
-				Text(Center, Word, 0.5f, 0.5f, 2.1f, Font::HouseScript, { HeaderRect.r, HeaderRect.g, HeaderRect.b, (byte)alpha }, 0, 1);
-				g_Fiber->Wait();
-			}
-			memset(Word, 0, sizeof(Word));
-			wordcount = 0;
-			count++;
+	openKey = false;
+	enterKey = false;
+	backKey = false;
+	leftKey = false;
+	rightKey = false;
+	upKey = false;
+	downKey = false;
 
-			if (_char == '\0') {
-				GRAPHICS::_TRANSITION_FROM_BLURRED(blurrspeed);
-				break;
-			}
-		}
-		g_Fiber->Wait();
+	static int timer = timeGetTime();
+	if (timeGetTime() - timer > EnterDelay) {
+		openKey = (IsKeyPressed(VK_F10) || IsKeyPressed(VK_MULTIPLY) || (CONTROLS::IS_DISABLED_CONTROL_PRESSED(0, INPUT_SCRIPT_RB) && CONTROLS::IS_DISABLED_CONTROL_PRESSED(0, INPUT_FRONTEND_RIGHT)));
+		if (openKey) timer = timeGetTime();
 	}
+
+	if (openKey) {
+		SetSubmenu(CurrentSubmenu ? nomenu : mainmenu);
+	}
+
+	if (CurrentSubmenu != nomenu) {
+		//Disables Phone
+		CONTROLS::DISABLE_CONTROL_ACTION(0, INPUT_PHONE, true);
+
+		//Disables Controller relatet stuff
+		CAM::SET_CINEMATIC_BUTTON_ACTIVE(0);
+		int disabledControls[] = { 0, 19, 20, 74, 80, 85, 140, 141, 142, 337 };
+		for (int i = 0; i < ARRAYSIZE(disabledControls); i++) {
+			CONTROLS::DISABLE_CONTROL_ACTION(0, disabledControls[i], true);
+		}
+
+		static int timer = timeGetTime();
+		static int timer1 = timeGetTime();
+		static int timer2 = timeGetTime();
+
+		if (timeGetTime() - timer > EnterDelay) {
+			enterKey = CONTROLS::IS_DISABLED_CONTROL_PRESSED(0, INPUT_FRONTEND_RDOWN) || IsKeyPressed(VK_NUMPAD5);
+			backKey = CONTROLS::IS_DISABLED_CONTROL_PRESSED(0, INPUT_FRONTEND_RRIGHT) || IsKeyPressed(VK_NUMPAD0);
+			if (enterKey || backKey) timer = timeGetTime();
+		}
+		if (timeGetTime() - timer1 > HorizontalDelay) {
+			leftKey = CONTROLS::IS_DISABLED_CONTROL_PRESSED(0, INPUT_FRONTEND_LEFT) || IsKeyPressed(VK_NUMPAD4);
+			rightKey = CONTROLS::IS_DISABLED_CONTROL_PRESSED(0, INPUT_FRONTEND_RIGHT) || IsKeyPressed(VK_NUMPAD6);
+			if (leftKey || rightKey) timer1 = timeGetTime();
+		}
+		if (timeGetTime() - timer2 > VerticalDelay) {
+			upKey = CONTROLS::IS_DISABLED_CONTROL_PRESSED(0, INPUT_FRONTEND_UP) || IsKeyPressed(VK_NUMPAD8);
+			downKey = CONTROLS::IS_DISABLED_CONTROL_PRESSED(0, INPUT_FRONTEND_DOWN) || IsKeyPressed(VK_NUMPAD2);
+			if (upKey || downKey) timer2 = timeGetTime();
+		}
+	}
+
+	if (backKey) {
+		SetSubmenu(SubmenuStack.back());
+	}
+
+	if (upKey) {
+		SelectedOption--;
+
+	} if (downKey) {
+		SelectedOption++;
+	}
+
+	if (SelectedOption < 1) {
+		SelectedOption = StaticOptionCount;
+	}
+	if (SelectedOption > StaticOptionCount && StaticOptionCount) {
+		SelectedOption = 1;
+	}
+
+	Menu();
+
+	if (!StaticOptionCount && OptionCount)
+		StaticOptionCount = OptionCount;
+
+	OptionCount = 0;
 }
+
 
 
 

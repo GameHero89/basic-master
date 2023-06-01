@@ -18,11 +18,6 @@ BOOL DllMain(HMODULE hModule, DWORD ul_reason_for_call, LPVOID lpReserved)
 				g_Pointers = new Pointers();
 				g_Invoker = new Invoker();
 				
-				while (*g_Pointers->m_GameState != 0) {
-					std::this_thread::sleep_for(100ms);
-					std::this_thread::yield();
-				}
-				
 				g_Pointers->PostInit();
 				
 				g_Fiber = new Fiber();
