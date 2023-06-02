@@ -46,7 +46,7 @@
     <ProjectGuid>{1C7009A7-258C-4629-B7F6-C2AEA048A244}</ProjectGuid>
     <Keyword>Win32Proj</Keyword>
     <RootNamespace>SimplyBase</RootNamespace>
-    <WindowsTargetPlatformVersion>10.0.22000.0</WindowsTargetPlatformVersion>
+    <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
     <ProjectName>Basic</ProjectName>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
