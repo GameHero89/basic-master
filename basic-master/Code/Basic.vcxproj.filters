@@ -1,0 +1,113 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Header">
+      <UniqueIdentifier>{6a429895-3a25-4f07-933e-47b52a3f79a1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Interface">
+      <UniqueIdentifier>{709feb08-7fd3-45dd-bff5-6729ebfb9643}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source">
+      <UniqueIdentifier>{7a568721-137c-4873-a829-d49c167a68b6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Features">
+      <UniqueIdentifier>{1899a709-f4f9-4a9f-9187-307e1492af04}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="Common.hpp">
+      <Filter>Header</Filter>
+    </ClInclude>
+    <ClInclude Include="Crossmap.hpp">
+      <Filter>Header</Filter>
+    </ClInclude>
+    <ClInclude Include="Enum.hpp">
+      <Filter>Header</Filter>
+    </ClInclude>
+    <ClInclude Include="Fiber.hpp">
+      <Filter>Header</Filter>
+    </ClInclude>
+    <ClInclude Include="Hooking.hpp">
+      <Filter>Header</Filter>
+    </ClInclude>
+    <ClInclude Include="Invoker.hpp">
+      <Filter>Header</Filter>
+    </ClInclude>
+    <ClInclude Include="Logger.hpp">
+      <Filter>Header</Filter>
+    </ClInclude>
+    <ClInclude Include="Memory.hpp">
+      <Filter>Header</Filter>
+    </ClInclude>
+    <ClInclude Include="Natives.hpp">
+      <Filter>Header</Filter>
+    </ClInclude>
+    <ClInclude Include="Pointers.hpp">
+      <Filter>Header</Filter>
+    </ClInclude>
+    <ClInclude Include="ScriptGlobal.hpp">
+      <Filter>Header</Filter>
+    </ClInclude>
+    <ClInclude Include="Types.hpp">
+      <Filter>Header</Filter>
+    </ClInclude>
+    <ClInclude Include="Util.hpp">
+      <Filter>Header</Filter>
+    </ClInclude>
+    <ClInclude Include="Interface.hpp">
+      <Filter>Interface</Filter>
+    </ClInclude>
+    <ClInclude Include="Features.hpp">
+      <Filter>Features</Filter>
+    </ClInclude>
+    <ClInclude Include="Timer.hpp">
+      <Filter>Header</Filter>
+    </ClInclude>
+    <ClInclude Include="Option.hpp">
+      <Filter>Interface</Filter>
+    </ClInclude>
+    <ClInclude Include="Drawing.hpp">
+      <Filter>Interface</Filter>
+    </ClInclude>
+    <ClInclude Include="Offsets.hpp">
+      <Filter>Header</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="Interface.cpp">
+      <Filter>Interface</Filter>
+    </ClCompile>
+    <ClCompile Include="Common.cpp">
+      <Filter>Source</Filter>
+    </ClCompile>
+    <ClCompile Include="Fiber.cpp">
+      <Filter>Source</Filter>
+    </ClCompile>
+    <ClCompile Include="Hooking.cpp">
+      <Filter>Source</Filter>
+    </ClCompile>
+    <ClCompile Include="Logger.cpp">
+      <Filter>Source</Filter>
+    </ClCompile>
+    <ClCompile Include="Main.cpp">
+      <Filter>Source</Filter>
+    </ClCompile>
+    <ClCompile Include="Pointers.cpp">
+      <Filter>Source</Filter>
+    </ClCompile>
+    <ClCompile Include="Features.cpp">
+      <Filter>Features</Filter>
+    </ClCompile>
+    <ClCompile Include="Drawing.cpp">
+      <Filter>Interface</Filter>
+    </ClCompile>
+    <ClCompile Include="Invoker.cpp">
+      <Filter>Source</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <MASM Include="Spoof.asm">
+      <Filter>Source</Filter>
+    </MASM>
+  </ItemGroup>
+</Project>
