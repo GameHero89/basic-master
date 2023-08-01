@@ -41,7 +41,8 @@
 #define VK_KEY_Z	0x5A                //('Z')	Z
 
 inline bool IsKeyPressed(std::uint16_t key) {
-	if (GetForegroundWindow() == FindWindowA("grcWindow", "Grand Theft Auto V")) {
+	static HWND window = FindWindowA("grcWindow", "Grand Theft Auto V");
+	if (GetForegroundWindow() == window) {
 		if (GetAsyncKeyState(key) & 0x8000) {
 			return true;
 		}
